@@ -54,16 +54,8 @@ int main()
                // i want to log in
                char username[256];
                int j = 0;
-               // for(int i = 8; i<strlen(buff); i++){
-               //      username[j] = buff[i];
-               //      j++;
-               // }
+
                strcpy(username, buff + 8);
-               // printf("j:%d\n", j);
-               // imi apar caractere din memorie cand username < 8
-               //  for (int i = j; i < 8; i++){
-               //       username[i]='\0';
-               //  }
 
                printf("{debug}username:%s strlen: %ld\n", username, strlen(username));
 
@@ -91,9 +83,9 @@ int main()
 
                     char usernames_file[256];
                     int usernames_file_len = read(fd3, usernames_file, 256);
-                    // printf("bytes %d\n", usernames_file_len);
+                    
                     usernames_file[usernames_file_len] = '\0';
-                    // printf("%s\n", usernames_file);
+                    
                     char *p = strtok(usernames_file, " ");
                     int found = 0;
                     while (p && found == 0)
@@ -102,12 +94,11 @@ int main()
                          {
                               found = 1;
                          }
-                         printf("p:%s\n", p);
+                         printf("{debug}p:%s\n", p);
                          p = strtok(NULL, " ");
                     }
                     printf("%d\n", found);
-                    // printf("i m in child!\n");
-                    // printf("username from child:%s\n", username);
+                    
                     close(fd3);
 
                     if (found == 1)
@@ -229,30 +220,25 @@ int main()
                          int socket[2];
                          // child writes      parent reads
 
-                         //int pipe2[2];
-                         //pipe(pipe2);
+                         static const int parentsocket = 0;
+                         static const int childsocket = 1;
+
+                         // call socketpair
+                         socketpair(PF_LOCAL, SOCK_STREAM, 0, socket);
 
                          pid_t pid3;
-
+                         pid3 = fork();
+                         
                          if (pid3 < 0)
                          {
                               perror("Eroare la fork()!\n");
                               exit(1);
                          }
 
-                         static const int parentsocket = 0;
-                         static const int childsocket = 1;
-
-                         // call socketpair
-                         //socketpair(PF_LOCAL, SOCK_STREAM, 0, socket);
-
-                         pid3 = fork();
                          if (pid3 == 0)
                          {
                               // i m in the child
                               close(socket[parentsocket]);
-
-                              //close(pipe2[READ]);
 
                               FILE *fd4 = fopen(file_with_info, "r");
                               if (fd4 == NULL)
@@ -263,6 +249,7 @@ int main()
 
                               char *line = NULL;
                               size_t len = 0;
+
                               while (getline(&line, &len, fd4) != -1)
                               {
                                    if (strstr(line, "Name") != 0)
@@ -305,7 +292,6 @@ int main()
                          {
                               // i m the parent
                               close(socket[childsocket]);
-                              //close(pipe2[WRITE]);
 
                               char read_data[4096];
                               int read_data_len = read(socket[parentsocket], read_data, 4096);
@@ -354,16 +340,6 @@ int main()
                }
                exit(0);
           }
-          // scriu eu ceva in fifo de la tastatura
-          //  char input[100];
-          //  scanf("%s", input);
-          //  int res = write(fd2, input, strlen(input));
-          //  if(res == -1){
-          //      perror("problema la scriere in fifo2\n");
-          //  }
-          //  else{
-          //      printf("s-a scris in fifo2 %d bytes, mesajul: %s\n", result, input);
-          //  }
 
           // vreau sa citesc iar
           // char buff[100];
