@@ -51,7 +51,7 @@ int main(){
       }
       else{
         buff[res] = '\0';
-        printf("s-au citit din FIFO2 %d bytes, mesajul %s\n", res, buff);
+        printf("raspuns: %s\n", buff);
       }
 
       //vreau sa scriu iar in fifo 
