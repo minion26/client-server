@@ -1,4 +1,4 @@
-#include <stdio.h> 
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -83,9 +83,9 @@ int main()
 
                     char usernames_file[256];
                     int usernames_file_len = read(fd3, usernames_file, 256);
-                    
+
                     usernames_file[usernames_file_len] = '\0';
-                    
+
                     char *p = strtok(usernames_file, " ");
                     int found = 0;
                     while (p && found == 0)
@@ -98,7 +98,7 @@ int main()
                          p = strtok(NULL, " ");
                     }
                     printf("%d\n", found);
-                    
+
                     close(fd3);
 
                     if (found == 1)
@@ -124,7 +124,7 @@ int main()
                          logged = 1;
                     }
 
-                    printf("{debug}}ogged: %d\n", logged);
+                    printf("{debug}logged: %d\n", logged);
 
                     write(fd2, response, response_len);
                     wait(NULL);
@@ -228,7 +228,7 @@ int main()
 
                          pid_t pid3;
                          pid3 = fork();
-                         
+
                          if (pid3 < 0)
                          {
                               perror("Eroare la fork()!\n");
@@ -264,26 +264,28 @@ int main()
                                         strcat(info_for_parent, "\n");
                                    }
 
-                                   if(strstr(line, "PPid") != 0){
+                                   if (strstr(line, "PPid") != 0)
+                                   {
                                         strcat(info_for_parent, line);
                                         strcat(info_for_parent, "\n");
                                    }
 
-                                   if(strstr(line, "Uid") != 0){
+                                   if (strstr(line, "Uid") != 0)
+                                   {
                                         strcat(info_for_parent, line);
                                         strcat(info_for_parent, "\n");
                                    }
 
-                                   if(strstr(line, "VmSize") != 0){
+                                   if (strstr(line, "VmSize") != 0)
+                                   {
                                         strcat(info_for_parent, line);
                                         strcat(info_for_parent, "\n");
                                    }
-
                               }
 
                               printf("{debug} %s\n", info_for_parent);
 
-                              //send the data to parent 
+                              // send the data to parent
                               write(socket[childsocket], info_for_parent, strlen(info_for_parent));
 
                               exit(0);
@@ -339,6 +341,16 @@ int main()
                     perror("problema la scriere in fifo2\n");
                }
                exit(0);
+          }
+
+          if (strstr(buff, "help") != 0 || strstr(buff, "/h") != 0)
+          {
+               printf("{debug} Clientul cere informatii depsre comenzi!");
+               int res = write(fd2, "[login : username] - verifica daca usernamenul exista \n [get-logged-users] - afiseaza informatii despre toti userii \n [get-proc-info : pid] - afiseaza informatii despre procesul cu pid-ul specificat \n [logout] - logging out \n [quit] - exist the program \n", strlen("[login : username] - verifica daca usernamenul exista \n [get-logged-users] - afiseaza informatii despre toti userii \n [get-proc-info : pid] - afiseaza informatii despre procesul cu pid-ul specificat \n [logout] - logging out \n [quit] - exist the program \n"));
+               if (res == -1)
+               {
+                    perror("problema la scriere in fifo2\n");
+               }
           }
 
           // vreau sa citesc iar
