@@ -1,4 +1,4 @@
-# FINALE client-server
+# FINAL client-server
 week 5 computer networks homework
 
 Develop two applications (named "client" and "server") which communicate between them using a protocol having the following specifications:
